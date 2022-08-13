@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>XHR</title>
+</head>
+
+<body>
+    <button id="syncBtn">同步</button>
+    <button id="asyncBtn">非同步</button>
+    <button id="countBtn">測試按鈕</button>
+    <div id="count">0</div>
+    <div id="response">message</div>
+
+    <script>
+        // test url: http://54.71.133.152:3000/
+        let date = new Date();
+
+        var responseDom = document.getElementById('response');
+
+        var asyncBtn = document.getElementById('asyncBtn');
+
+        function xhrPromise(method, url) {
+            return new Promise((resolve, reject) => {
+                var xhr = new XMLHttpRequest();
+                xhr.addEventListener('load', function () {
+                    if (xhr.status === 200) {
+                        // 這裡是成功
+                        resolve(xhr.responseText);
+                        // responseDom.innerHTML = `非同步請求已回覆 ${xhr.responseText}`;
+                        // 職責切割 （單一職責）
+                    } else {
+                        // 這裡是失敗
+                        reject(xhr.status);
+                        // responseDom.innerHTML = `非同步請求失敗，狀態碼 ${xhr.status}`;
+                    }
+                });
+
+                xhr.onerror = function (event) {
+                    // 這裡也是失敗
+                    // responseDom.innerHTML = `XHR 非同步請求錯誤`;
+                    reject('XHR 非同步請求錯誤');
+                };
+
+                // method, url, async (default: true)
+                // GET, POST, UPDATE, DELETE, PUT, PATCH,...
+                xhr.open(method, url, true);
+                xhr.send();
+            });
+        }
+
+        asyncBtn.addEventListener('click', async function () {
+            responseDom.innerText = '開始「非」同步請求';
+            // 實作非同步請求
+            // 'http://54.71.133.152:3000'
+            try {
+                let data = await xhrPromise('GET', 'http://54.71.133.152:3000');
+                responseDom.innerHTML = `這個是 await 版本: ${data}`;
+            } catch (e) {
+                console.error('發生錯誤拉', e);
+            }
+        });
+
+        var count = document.getElementById('count');
+        var countBtn = document.getElementById('countBtn');
+        countBtn.addEventListener('click', function () {
+            count.innerText = parseInt(count.innerText, 10) + 1;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>fetch</title>
+</head>
+
+<body>
+    <button id="asyncBtn">fetch</button>
+    <button id="countBtn">測試按鈕</button>
+    <div id="count">0</div>
+    <div id="response">message</div>
+
+    <script>
+        // test url: http://54.71.133.152:3000/
+        // test url for 500: http://54.71.133.152:3000/error
+        let date = new Date();
+
+        var responseDom = document.getElementById('response');
+
+        var asyncBtn = document.getElementById('asyncBtn');
+
+        asyncBtn.addEventListener('click', function () {
+            responseDom.innerText = '開始「非」同步請求';
+            // 實作非同步請求
+            // 'http://54.71.133.152:3000'
+            // https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch#%E4%BD%BF%E7%94%A8_fetch_%E7%99%BC%E9%80%81%E8%AB%8B%E6%B1%82_request
+            fetch('http://54.71.133.152:3000')
+                .then(function (response) {
+                    // return promise
+                    return response.text();
+                })
+                .then(function (data) {
+                    responseDom.innerHTML = `Fetch 的結果: ${data}`;
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            // TODO: 用 await 來寫
+        });
+
+        var count = document.getElementById('count');
+        var countBtn = document.getElementById('countBtn');
+        countBtn.addEventListener('click', function () {
+            count.innerText = parseInt(count.innerText, 10) + 1;
+        });
+    </script>
+</body>
+
+</html>
