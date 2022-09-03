@@ -48,10 +48,17 @@ require('dotenv').config();
     });
 
     // 需要從 stock.txt 的檔案裡讀取股票代碼
-    let stockNo = await fs.readFile('stock.txt', 'utf-8');
+    // TXT讀取出來是 String 
+    let stockNoString = await fs.readFile('stock.txt', 'utf-8');
+    console.log(stockNoString)
+
+    //  轉換成陣列
+    let stockNoArray = stockNoString.split(',')
+    console.log(stockNoArray);
 
     // 去查詢股票代碼的中文名稱
     // https://www.twse.com.tw/zh/api/codeQuery?query=2330
+    // for (let i=0; i<stockNoArray.length; i++){
     let queryNameResponse = await axios.get('https://www.twse.com.tw/zh/api/codeQuery', {
       params: {
         query: stockNo,
