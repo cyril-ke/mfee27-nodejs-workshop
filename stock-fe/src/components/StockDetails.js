@@ -27,6 +27,7 @@ const StockDetails = () => {
       setLastPage(response.data.pagination.lastPage);
     };
     getStockDetail();
+    // page 每次變動就要呼叫一次useEffect
   }, [page]);
 
   // 製作頁碼按鈕

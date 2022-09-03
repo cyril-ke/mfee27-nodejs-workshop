@@ -1,3 +1,4 @@
+// 維持模組的獨立性
 require('dotenv').config();
 
 //使用資料庫
