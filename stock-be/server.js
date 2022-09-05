@@ -26,11 +26,26 @@ app.use(cors());
 // 引用 server 需要的資料庫模組
 const pool = require("./utils/db");
 
+// 如果要讓 express 認得 json，要使用 express 中間鍵，
+// 順序非常重要
+app.use(express.json())
+
+// express.json  不會幫你解析 multipart/form-data，目前也沒套件解析
+// Content-type: multipart/form-data
+
 // 設定視圖引擎，我們用的是 pug
 // npm i pug
 app.set("view engine", "pug");
 // 告訴 express 視圖在哪裡
 app.set("views", "views");
+
+//設置靜態檔案
+// express.static => 讓靜態檔案可以有網址
+// localhost:3002/uploads/圖片名稱....
+const path = require('path');
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+
 
 // 測試 server side render 的寫法
 app.get("/ssr", (req, res, next) => {
@@ -78,11 +93,13 @@ app.get("/test", (req, res, next) => {
   // next();
 });
 
-
 // 雖然做了mini app ，但還沒跟app說要用它，所以要把他們掛勾起來
 let stockRouter = require("./routers/stocks");
 // router重複的網址部分，可以剪下貼過來，就可以省略router內的網址
-app.use('/api/1.0/stocks', stockRouter)
+app.use("/api/1.0/stocks", stockRouter);
+
+let authRouter = require("./routers/auth");
+app.use(authRouter);
 
 // app.get('/test', (req, res, next) => {
 //   console.log('這裡是 test 2');
